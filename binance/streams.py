@@ -270,8 +270,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
     async def _keepalive_socket(self):
         try:
-            listen_key = await self._get_listen_key()
-            if listen_key != self._path:
+            if (listen_key := await self._get_listen_key()) != self._path:
                 self._log.debug("listen key changed: reconnect")
                 self._path = listen_key
                 await self._reconnect()

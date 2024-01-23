@@ -1017,10 +1017,9 @@ class Client(BaseClient):
         timeframe = interval_to_milliseconds(interval)
 
         # if a start time was passed convert it
-        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        if start_ts is not None:
+        if (start_ts := convert_ts_str(start_str)) is not None:
             first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
 
@@ -1032,17 +1031,16 @@ class Client(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            temp_data = self._klines(
+
+            # append this loops data to our output data
+            if temp_data := self._klines(
                 klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
                 startTime=start_ts,
                 endTime=end_ts
-            )
-
-            # append this loops data to our output data
-            if temp_data:
+            ):
                 output_data += temp_data
 
             # handle the case where exactly the limit amount of data was returned last loop
@@ -1115,10 +1113,9 @@ class Client(BaseClient):
         timeframe = interval_to_milliseconds(interval)
 
         # if a start time was passed convert it
-        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        if start_ts is not None:
+        if (start_ts := convert_ts_str(start_str)) is not None:
             first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
 
@@ -1130,17 +1127,16 @@ class Client(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            output_data = self._klines(
+
+            # yield data
+            if output_data := self._klines(
                 klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
                 startTime=start_ts,
                 endTime=end_ts
-            )
-
-            # yield data
-            if output_data:
+            ):
                 for o in output_data:
                     yield o
 
@@ -8429,8 +8425,7 @@ class AsyncClient(BaseClient):
         timeframe = interval_to_milliseconds(interval)
 
         # establish first available start timestamp
-        start_ts = convert_ts_str(start_str)
-        if start_ts is not None:
+        if (start_ts := convert_ts_str(start_str)) is not None:
             first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
 
@@ -8442,17 +8437,16 @@ class AsyncClient(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            temp_data = await self._klines(
+
+            # append this loops data to our output data
+            if temp_data := await self._klines(
                 klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
                 startTime=start_ts,
                 endTime=end_ts
-            )
-
-            # append this loops data to our output data
-            if temp_data:
+            ):
                 output_data += temp_data
 
             # handle the case where exactly the limit amount of data was returned last loop
@@ -8491,10 +8485,9 @@ class AsyncClient(BaseClient):
         timeframe = interval_to_milliseconds(interval)
 
         # if a start time was passed convert it
-        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        if start_ts is not None:
+        if (start_ts := convert_ts_str(start_str)) is not None:
             first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
 
@@ -8506,17 +8499,16 @@ class AsyncClient(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            output_data = await self._klines(
+
+            # yield data
+            if output_data := await self._klines(
                 klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
                 startTime=start_ts,
                 endTime=end_ts
-            )
-
-            # yield data
-            if output_data:
+            ):
                 for o in output_data:
                     yield o
 
