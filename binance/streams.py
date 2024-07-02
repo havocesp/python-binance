@@ -5,7 +5,6 @@ import logging
 import time
 from asyncio import sleep
 from enum import Enum
-from random import random
 from socket import gaierror
 from typing import Optional, List, Dict, Callable, Any
 
@@ -18,6 +17,7 @@ from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import ContractType
 from .helpers import get_loop
 from .threaded_stream import ThreadedApiManager
+import secrets
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
 
@@ -205,7 +205,7 @@ class ReconnectingWebsocket:
 
     def _get_reconnect_wait(self, attempts: int) -> int:
         expo = 2 ** attempts
-        return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
+        return round(secrets.SystemRandom().random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def before_reconnect(self):
         if self.ws and self._conn:
